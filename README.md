@@ -11,4 +11,5 @@ In this homework, you will develop a path planning framework for a service robot
 ## Contributor
 
 [Huangji Wang](https://github.com/AnkorTn/)
+
 [Zhiteng Li](https://github.com/ZHITENGLI)
