@@ -25,7 +25,8 @@ np.random.seed(RANDOM_SEED)
 ##### START CODING HERE #####
 
 # construct the intelligent agent.
-agent = QLearningAgent(all_actions)
+# add paras size of action space and learning rate (0.1)
+agent = QLearningAgent(all_actions, num_actions, lr=0.1)
 
 # start training
 for episode in range(1000):
@@ -45,7 +46,9 @@ for episode in range(1000):
         episode_reward += r
         print(f"{s} {a} {s_} {r} {isdone}")
         # agent learns from experience
-        agent.learn()
+
+        # add paras previous state, next state, reward and discouting factor
+        agent.learn(s, s_, r, gamma=0.9)
         s = s_
         if isdone:
             time.sleep(0.5)
