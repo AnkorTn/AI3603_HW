@@ -117,7 +117,7 @@ class QLearningAgent(object):
                 max_q = self.q_table[s_][i]
 
         # Q-learning update rule
-        # topo in pseducode
+        # topo in pseudocode
         self.q_table[s][a] = (1-self.lr)*self.q_table[s][a] + self.lr*(r + gamma*max_q)
 
         # print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
