@@ -25,8 +25,8 @@ np.random.seed(RANDOM_SEED)
 ##### START CODING HERE #####
 
 # construct the intelligent agent.
-# add paras size of action space, learning rate and epsilon (for epsilon-greedy)
-agent = QLearningAgent(all_actions, num_actions, lr=0.1, epsilon=0.1)
+# add paras size of action space, and learning rate
+agent = QLearningAgent(all_actions, num_actions, lr=0.1)
 
 # start training
 for episode in range(1000):

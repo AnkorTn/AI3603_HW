@@ -48,11 +48,13 @@ class SarsaAgent(object):
 """TODO: Implement your Q-Learning agent here"""
 class QLearningAgent(object):
     ##### START CODING HERE #####
-    # add paras size of action space, learning rate and epsilon (for epsilon-greedy)
-    def __init__(self, all_actions, num_actions, lr, epsilon):
+    # add paras size of action space, and learning rate
+    def __init__(self, all_actions, num_actions, lr):
         """initialize the agent. Maybe more function inputs are needed."""
         self.all_actions = all_actions
-        self.epsilon = 1.0
+
+        # epsilon-greedy
+        self.epsilon = 0.1
 
         # initialize Q-table by the size of action space and state space (4*12)
         self.q_table = [[0 for _ in range(num_actions)] for _ in range(4*12)]
@@ -68,9 +70,6 @@ class QLearningAgent(object):
 
         # learning rate
         self.lr = lr
-
-        # epsilon-greedy
-        self.epsilon = epsilon
 
     def is_terminal(self,s):
         """determine whether s is in the terminal state """
@@ -105,11 +104,6 @@ class QLearningAgent(object):
         """learn from experience"""
         # time.sleep(0.5)
 
-        # if s is terminal
-        if (self.is_terminal(s_)):
-            self.q_table[s][a] = self.q_table[s_][0]
-            return
-
         max_q = float('-inf')
 
         for i in range(len(self.q_table[s_])):
@@ -122,11 +116,6 @@ class QLearningAgent(object):
 
         # print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
         return True
-    
-    def your_function(self, params):
-        """You can add other functions as you wish."""
-        do_something = True
-        return None
 
     ##### END CODING HERE #####
 
