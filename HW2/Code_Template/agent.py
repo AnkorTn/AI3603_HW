@@ -100,23 +100,27 @@ class QLearningAgent(object):
 
         return action
     
-    # add paras previous state, next state, reward and discounting factor
-    def learn(self, s, s_, r, gamma):
+    # add paras previous state, next state, action, reward and discounting factor
+    def learn(self, s, s_, a, r, gamma):
         """learn from experience"""
         # time.sleep(0.5)
 
-        max_q = 0
+        # if s is terminal
+        if (self.is_terminal(s_)):
+            self.q_table[s][a] = self.q_table[s_][0]
+            return
+
+        max_q = float('-inf')
 
         for i in range(len(self.q_table[s_])):
             if (self.q_table[s_][i] > max_q):
                 max_q = self.q_table[s_][i]
 
-        for i in range(len(self.q_table[s_])):
-            # Q-learning update rule
-            # -1 is the living reward
-            self.q_table[s_][i] = (1-self.lr)*self.q_table[s][i] + self.lr*(-1 + gamma*max_q)
+        # Q-learning update rule
+        # topo in pseducode
+        self.q_table[s][a] = (1-self.lr)*self.q_table[s][a] + self.lr*(r + gamma*max_q)
 
-        print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
+        # print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
         return True
     
     def your_function(self, params):
