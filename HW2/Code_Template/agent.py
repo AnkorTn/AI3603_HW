@@ -72,8 +72,9 @@ class QLearningAgent(object):
         # epsilon-greedy
         self.epsilon = epsilon
 
-    def is_terminal(self,s):
+    def your_function(self,s):
         """determine whether s is in the terminal state """
+        """You can add other functions as you wish."""
         # reach the goal or fall into the cliff
         return (s >= 1 and s <= 11)
 
@@ -87,7 +88,7 @@ class QLearningAgent(object):
 
         # (1-epsilon) probability to choose determine strategy 
         # if s is not terminal
-        if (not self.is_terminal(observation)):
+        if (not self.your_function(observation)):
             # calculate pi according to Q and exploration strategy
             action = 0
 
@@ -106,7 +107,7 @@ class QLearningAgent(object):
         # time.sleep(0.5)
 
         # if s is terminal
-        if (self.is_terminal(s_)):
+        if (self.your_function(s_)):
             self.q_table[s][a] = self.q_table[s_][0]
             return
 
@@ -123,11 +124,6 @@ class QLearningAgent(object):
         # print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
         return True
     
-    def your_function(self, params):
-        """You can add other functions as you wish."""
-        do_something = True
-        return None
-
     ##### END CODING HERE #####
 
 # ------------------------------------------------------------------------------------------- #
