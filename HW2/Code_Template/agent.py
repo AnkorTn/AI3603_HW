@@ -73,6 +73,7 @@ class QLearningAgent(object):
 
     def is_terminal(self,s):
         """determine whether s is in the terminal state """
+        """You can add other functions as you wish."""
         # reach the goal or fall into the cliff
         return (s >= 1 and s <= 11)
 
@@ -116,7 +117,6 @@ class QLearningAgent(object):
 
         # print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
         return True
-
     ##### END CODING HERE #####
 
 # ------------------------------------------------------------------------------------------- #

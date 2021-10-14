@@ -44,7 +44,8 @@ for episode in range(1000):
         env.render()
         # update the episode reward
         episode_reward += r
-        # print(f"{s} {a} {s_} {r} {isdone}")
+        
+        print(f"{s} {a} {s_} {r} {isdone}")
         # agent learns from experience
 
         # add paras size of action space, learning rate and epsilon (for epsilon-greedy)
