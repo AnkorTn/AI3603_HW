@@ -44,15 +44,16 @@ for episode in range(1000):
         env.render()
         # update the episode reward
         episode_reward += r
-        print(f"{s} {a} {s_} {r} {isdone}")
+        # print(f"{s} {a} {s_} {r} {isdone}")
         # agent learns from experience
 
         # add paras size of action space, learning rate and epsilon (for epsilon-greedy)
-        agent.learn(s, s_, r, gamma=0.9)
+        agent.learn(s, s_, a, r, gamma=0.9)
         s = s_
         if isdone:
             time.sleep(0.5)
             break
+    # print(agent.q_table)
     print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
 print('\ntraining over\n')   
 
