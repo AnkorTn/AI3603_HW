@@ -2,6 +2,7 @@
 import math, os, time, sys
 import numpy as np
 import gym
+import random
 ##### START CODING HERE #####
 # This code block is optional. You can import other libraries or define your utility functions if necessary.
 
@@ -47,8 +48,8 @@ class SarsaAgent(object):
 """TODO: Implement your Q-Learning agent here"""
 class QLearningAgent(object):
     ##### START CODING HERE #####
-    # add paras size of action space and learning rate
-    def __init__(self, all_actions, num_actions, lr):
+    # add paras size of action space, learning rate and epsilon (for epsilon-greedy)
+    def __init__(self, all_actions, num_actions, lr, epsilon):
         """initialize the agent. Maybe more function inputs are needed."""
         self.all_actions = all_actions
         self.epsilon = 1.0
@@ -56,24 +57,41 @@ class QLearningAgent(object):
         # initialize Q-table by the size of action space and state space (4*12)
         self.q_table = [[0 for _ in range(num_actions)] for _ in range(4*12)]
 
+        # assign the value of goal
+        for j in range(4):
+            self.q_table[11][j] = 10
+
+        # assign the value of cliff
+        for i in range(1,11):
+            for j in range(4):
+                self.q_table[i][j] = -100
+
         # learning rate
         self.lr = lr
 
+        # epsilon-greedy
+        self.epsilon = epsilon
+
     def is_terminal(self,s):
         """determine whether s is in the terminal state """
-        return s == 11
+        # reach the goal or fall into the cliff
+        return (s >= 1 and s <= 11)
 
     def choose_action(self, observation):
         """choose action with epsilon-greedy algorithm."""
-        # # random strategy
-        # action = np.random.choice(self.all_actions)
+        # epsilon-greedy
+        # epsilon probability to choose random strategy
+        if (random.random() < self.epsilon):
+            action = np.random.choice(self.all_actions)
+            return action
 
+        # (1-epsilon) probability to choose determine strategy 
         # if s is not terminal
         if (not self.is_terminal(observation)):
             # calculate pi according to Q and exploration strategy
             action = 0
 
-            max_q = 0
+            max_q = float('-inf')
 
             for i in range(len(self.q_table[observation])):
                 if (self.q_table[observation][i] > max_q):
@@ -95,7 +113,8 @@ class QLearningAgent(object):
 
         for i in range(len(self.q_table[s_])):
             # Q-learning update rule
-            self.q_table[s_][i] = (1-self.lr)*self.q_table[s][i] + self.lr*(r + gamma*max_q)
+            # -1 is the living reward
+            self.q_table[s_][i] = (1-self.lr)*self.q_table[s][i] + self.lr*(-1 + gamma*max_q)
 
         print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
         return True
