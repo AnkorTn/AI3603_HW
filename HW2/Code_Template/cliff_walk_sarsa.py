@@ -26,7 +26,7 @@ np.random.seed(RANDOM_SEED)
 ####### START CODING HERE #######
 
 # construct the intelligent agent.
-agent = SarsaAgent(all_actions, num_actions, lr=0.1)
+agent = SarsaAgent(all_actions, num_actions)
 
 # start training
 for episode in range(1000):
@@ -60,7 +60,15 @@ for episode in range(1000):
             # time.sleep(0.5)
             break    
     # the epsilon value declines in each step.
-    agent.epsilon *= 0.99
+    if(agent.lr > 0.01):
+        agent.lr *= 0.99
+    else:
+        agent.lr = 0
+
+    if(agent.epsilon > 0.008):
+        agent.epsilon *= 0.99
+    else:
+        agent.epsilon = 0
     print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
 print('\ntraining over\n')   
 
