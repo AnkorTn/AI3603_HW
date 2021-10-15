@@ -59,23 +59,8 @@ class QLearningAgent(object):
         # initialize Q-table by the size of action space and state space (4*12)
         self.q_table = [[0 for _ in range(num_actions)] for _ in range(4*12)]
 
-        # assign the value of goal
-        for j in range(4):
-            self.q_table[11][j] = 10
-
-        # assign the value of cliff
-        for i in range(1,11):
-            for j in range(4):
-                self.q_table[i][j] = -100
-
         # learning rate
         self.lr = lr
-
-    def is_terminal(self,s):
-        """determine whether s is in the terminal state """
-        """You can add other functions as you wish."""
-        # reach the goal or fall into the cliff
-        return (s >= 1 and s <= 11)
 
     def choose_action(self, observation):
         """choose action with epsilon-greedy algorithm."""
@@ -85,18 +70,16 @@ class QLearningAgent(object):
             action = np.random.choice(self.all_actions)
             return action
 
-        # (1-epsilon) probability to choose determine strategy 
-        # if s is not terminal
-        if (not self.is_terminal(observation)):
-            # calculate pi according to Q and exploration strategy
-            action = 0
+        # (1-epsilon) probability to choose determine strategy
+        # calculate pi according to Q and exploration strategy
+        action = 0
 
-            max_q = float('-inf')
+        max_q = float('-inf')
 
-            for i in range(len(self.q_table[observation])):
-                if (self.q_table[observation][i] > max_q):
-                    max_q = self.q_table[observation][i]
-                    action = i
+        for i in range(len(self.q_table[observation])):
+            if (self.q_table[observation][i] > max_q):
+                max_q = self.q_table[observation][i]
+                action = i
 
         return action
     
