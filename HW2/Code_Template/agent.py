@@ -55,13 +55,14 @@ class SarsaAgent(object):
         return action
     
     # add paras previous state, next state, action, reward and discounting factor
+    # Sarsa: firstly determine the direction and then go directly.
     def learn(self, s, s_, a, a_, r, gamma):
         """learn from experience"""
         # time.sleep(0.5)
         # q_next()
         max_q = self.q_table[s_][a_]
 
-        # Q-learning update rule
+        # Sarsa-algorithm update rule
         # topo in pseudocode
         self.q_table[s][a] = (1-self.lr)*self.q_table[s][a] + self.lr*(r + gamma*max_q)
 
