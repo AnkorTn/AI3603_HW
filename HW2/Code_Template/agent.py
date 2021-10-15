@@ -20,7 +20,7 @@ You need to implement the Q-learning agent, Sarsa agent and Dyna-Q agent in this
 class SarsaAgent(object):
     ##### START CODING HERE #####
     # add paras size of action space, and learning rate
-    def __init__(self, all_actions, num_actions, lr):
+    def __init__(self, all_actions, num_actions):
         """initialize the agent. Maybe more function inputs are needed."""
         self.all_actions = all_actions
 
@@ -31,7 +31,7 @@ class SarsaAgent(object):
         self.q_table = [[0 for _ in range(num_actions)] for _ in range(4*12)]
 
         # learning rate
-        self.lr = lr
+        self.lr = 1.0
 
     def choose_action(self, observation):
         """choose action with epsilon-greedy algorithm."""
@@ -55,13 +55,14 @@ class SarsaAgent(object):
         return action
     
     # add paras previous state, next state, action, reward and discounting factor
+    # Sarsa: firstly determine the direction and then go directly.
     def learn(self, s, s_, a, a_, r, gamma):
         """learn from experience"""
         # time.sleep(0.5)
         # q_next()
         max_q = self.q_table[s_][a_]
 
-        # Q-learning update rule
+        # Sarsa-algorithm update rule
         # topo in pseudocode
         self.q_table[s][a] = (1-self.lr)*self.q_table[s][a] + self.lr*(r + gamma*max_q)
 
