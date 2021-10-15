@@ -5,7 +5,7 @@ import numpy as np
 import random
 import gym
 from gym_gridworld import CliffWalk
-from agent import SarsaAgent
+from agent import SarsaAgent 
 ##### START CODING HERE #####
 # This code block is optional. You can import other libraries or define your utility functions if necessary.
 
@@ -26,7 +26,7 @@ np.random.seed(RANDOM_SEED)
 ####### START CODING HERE #######
 
 # construct the intelligent agent.
-agent = SarsaAgent(all_actions) 
+agent = SarsaAgent(all_actions, num_actions, lr=0.1)
 
 # start training
 for episode in range(1000):
@@ -34,23 +34,33 @@ for episode in range(1000):
     episode_reward = 0
     # reset env
     s = env.reset()
+    # choose an action
+    a = agent.choose_action(s)
     # render env. You can comment all render() to turn off the GUI to accelerate training.
-    env.render()
+    env.render()    
     # agent interacts with the environment
     for iter in range(500):
-        # choose an action
-        a = agent.choose_action(s)
+        # take action a, observe r, s_
         s_, r, isdone, info = env.step(a)
+        # choose a_ from s_ using policy derived from Q
+        a_ = agent.choose_action(s_)
         env.render()
         # update the episode reward
         episode_reward += r
-        print(f"{s} {a} {s_} {r} {isdone}")
+        # print(f"{s} {a} {s_} {r} {isdone}")
         # agent learns from experience
-        agent.learn()
+        agent.learn(s, s_, a, a_, r, gamma = 0.9)
         s = s_
+        a = a_
         if isdone:
-            time.sleep(0.5)
-            break
+            # assign the value of teminal
+            for a in all_actions:
+                agent.q_table[s][a] = r
+            
+            # time.sleep(0.5)
+            break    
+    # the epsilon value declines in each step.
+    agent.epsilon *= 0.99
     print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
 print('\ntraining over\n')   
 
