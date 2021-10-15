@@ -55,11 +55,18 @@ for episode in range(1000):
             # assign the value of teminal
             for a in all_actions:
                 agent.q_table[s][a] = r
-                
-            time.sleep(0.5)
+
+            # time.sleep(0.5)
             break
-    print(agent.q_table)
-#     print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
+    # print(agent.q_table)
+
+    print('episode:{} episode_reward:{} epsilon:{}'.format(episode,episode_reward,round(agent.epsilon,1)))
+    # print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
+
+    # decrease epsilon
+    if (agent.epsilon > 0.1 and episode % 10 == 0):
+        agent.epsilon -= 0.1
+
 # print('\ntraining over\n')   
 
 # close the render window after training.
