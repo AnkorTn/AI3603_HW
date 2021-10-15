@@ -63,11 +63,12 @@ for episode in range(1000):
     print('episode:{} episode_reward:{} epsilon:{}'.format(episode,episode_reward,round(agent.epsilon,1)))
     # print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
 
-    # decrease epsilon
-    if (agent.epsilon > 0.1 and (episode+1) % 10 == 0):
-        agent.epsilon -= 0.1
-    if (agent.lr > 0.2 and (episode+1) % 10 == 0):
-        agent.lr -= 0.1
+    # decrease epsilon and learning rate
+    if (agent.epsilon < 1e-2):
+        agent.epsilon = 0
+    else:
+        agent.epsilon *= 0.95
+    agent.lr *= 0.99
 
 # print('\ntraining over\n')   
 
