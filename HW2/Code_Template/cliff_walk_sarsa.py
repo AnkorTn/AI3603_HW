@@ -60,10 +60,10 @@ for episode in range(1000):
             # time.sleep(0.5)
             break    
     # the epsilon value declines in each step.
-    if(agent.lr > 0.01):
-        agent.lr *= 0.99
-    else:
-        agent.lr = 0
+    # if(agent.lr > 0.01):
+        # agent.lr *= 0.9
+    # else:
+        # agent.lr = 0
 
     if(agent.epsilon > 0.008):
         agent.epsilon *= 0.99
