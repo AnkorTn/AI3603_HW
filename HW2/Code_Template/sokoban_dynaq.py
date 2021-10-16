@@ -50,7 +50,9 @@ for episode in range(1000):
         episode_reward += r
 
         # append experience into experience pool
-        agent.experience.append((state, state_, a, r))
+        agent.experience.add((state, state_, a, r))
+
+        print(len(agent.experience))
 
         # print(f"{s} {a} {s_} {r} {isdone}")
 
@@ -69,12 +71,13 @@ for episode in range(1000):
     print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
 
     # decrease epsilon and learning rate
-    if (agent.epsilon < 1e-2):
+    if (agent.epsilon < 0.05):
         agent.epsilon = 0
     else:
-        agent.epsilon *= 0.98
+        agent.epsilon *= 0.97
 
     agent.lr *= 0.99
+
 
 print('\ntraining over\n')   
 
