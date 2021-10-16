@@ -20,7 +20,7 @@ You need to implement the Q-learning agent, Sarsa agent and Dyna-Q agent in this
 class SarsaAgent(object):
     ##### START CODING HERE #####
     # add paras size of action space, and learning rate
-    def __init__(self, all_actions, num_actions):
+    def __init__(self, all_actions, num_actions, num_space):
         """initialize the agent. Maybe more function inputs are needed."""
         self.all_actions = all_actions
 
@@ -28,7 +28,7 @@ class SarsaAgent(object):
         self.epsilon = 1.0
 
         # initialize Q-table by the size of action space and state space (4*12)
-        self.q_table = [[0 for _ in range(num_actions)] for _ in range(4*12)]
+        self.q_table = [[0 for _ in range(num_actions)] for _ in range(num_space)]
 
         # learning rate
         self.lr = 1.0

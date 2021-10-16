@@ -26,7 +26,8 @@ np.random.seed(RANDOM_SEED)
 ####### START CODING HERE #######
 
 # construct the intelligent agent.
-agent = SarsaAgent(all_actions, num_actions)
+num_space = 4 * 12
+agent = SarsaAgent(all_actions, num_actions, num_space)
 
 # start training
 for episode in range(1000):
