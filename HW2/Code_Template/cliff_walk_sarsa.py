@@ -56,6 +56,7 @@ for episode in range(1000):
         a = a_
         if isdone:
             # assign the value of teminal
+            # env.render()
             for a in all_actions:
                 agent.q_table[s][a] = r
             
@@ -74,11 +75,11 @@ for episode in range(1000):
     print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
     # At last, we should plot the episode reward during the train process.
     # We use excel to plot it because this may be seen nicely.
-    with open(r'HW2\\Code_Template\\episode_reward_sarsa.txt', 'a', encoding='utf-8') as f:
-        f.write(str(episode) + '\t' + str(episode_reward) + '\n')
+    # with open(r'HW2\\Code_Template\\episode_reward_sarsa.txt', 'a', encoding='utf-8') as f:
+    #     f.write(str(episode) + '\t' + str(episode_reward) + '\n')
     # Plot the epsilon value during the training.
-    with open(r'HW2\\Code_Template\\epsilon_value_sarsa.txt', 'a', encoding='utf-8') as f:
-        f.write(str(episode) + '\t' + str(agent.epsilon) + '\n')
+    # with open(r'HW2\\Code_Template\\epsilon_value_sarsa.txt', 'a', encoding='utf-8') as f:
+        # f.write(str(episode) + '\t' + str(agent.epsilon) + '\n')
     # Visualize the final path after training.
 print('\ntraining over\n')
 
