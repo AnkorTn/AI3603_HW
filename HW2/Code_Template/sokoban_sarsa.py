@@ -61,8 +61,8 @@ for episode in range(1000):
     # else:
         # agent.lr = 0
 
-    if(agent.epsilon > 0.01):
-        agent.epsilon *= 0.99
+    if(agent.epsilon > 0.05):
+        agent.epsilon *= 0.95
     else:
         agent.epsilon = 0
     print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  

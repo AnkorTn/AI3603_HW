@@ -7,6 +7,7 @@ import random, gym
 from gym.wrappers import Monitor
 from agent import DynaQAgent
 import gym_sokoban
+from heapq import *
 ##### START CODING HERE #####
 # This code block is optional. You can import other libraries or define your utility functions if necessary.
 
@@ -26,6 +27,16 @@ np.random.seed(RANDOM_SEED)
 
 
 ####### START CODING HERE #######
+
+class experience:
+    def __init__(self, s, s_, a, r, td):
+        self.s, self.s_ = s, s_
+        self.a = a
+        self.r = r
+        self.td = td
+
+    def __lt__(self, other):
+        return self.td < other.td
 
 # construct the intelligent agent.
 agent = DynaQAgent(all_actions, num_actions, num_space=200000)
@@ -50,18 +61,31 @@ for episode in range(1000):
         episode_reward += r
 
         # append experience into experience pool
-        agent.experience.add((state, state_, a, r))
+        td = agent.TD_error(state, state_, a, r, gamma=0.9)
+        e = experience(state, state_, a, r, -td)
+        heappush(agent.experience, e)
 
-        print(len(agent.experience))
+        # agent.experience.add((state, state_, a, r))
+        # print(len(agent.experience))
 
         # print(f"{s} {a} {s_} {r} {isdone}")
 
         # learn from experience pool
-        for experience in agent.experience:
-            state, state_ = experience[0], experience[1]
-            a = experience[2]
-            r = experience[3]
+        cnt = 100
+        while (cnt and agent.experience):
+            e = heappop(agent.experience)
+            state, state_ = e.s, e.s_
+            a = e.a
+            r = e.r
             agent.learn(state, state_, a, r, gamma=0.9)
+            cnt -= 1
+            agent.lr *= 0.99999
+
+        # for experience in agent.experience:
+        #     state, state_ = experience[0], experience[1]
+        #     a = experience[2]
+        #     r = experience[3]
+        #     agent.learn(state, state_, a, r, gamma=0.9)
         
         s = s_
         if isdone:
@@ -74,9 +98,8 @@ for episode in range(1000):
     if (agent.epsilon < 0.05):
         agent.epsilon = 0
     else:
-        agent.epsilon *= 0.97
+        agent.epsilon *= 0.87
 
-    agent.lr *= 0.99
 
 
 print('\ntraining over\n')   

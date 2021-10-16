@@ -147,7 +147,7 @@ class DynaQAgent(object):
         self.lr = 1.0
 
         # each experience contains a tuple (s,a,s',r)
-        self.experience = set()
+        self.experience = []
 
     def choose_action(self, observation):
         """choose action with epsilon-greedy algorithm."""
@@ -188,7 +188,8 @@ class DynaQAgent(object):
         # print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
         return True
     
-    def TD_error(self, s, s_, a, r):
+    # prioritized sample
+    def TD_error(self, s, s_, a, r, gamma):
         """You can add other functions as you wish."""
         max_q = float('-inf')
 
@@ -196,8 +197,8 @@ class DynaQAgent(object):
             if (self.q_table[s_][i] > max_q):
                 max_q = self.q_table[s_][i]
 
-        td = 
-        return None
+        td = r + gamma*max_q - self.q_table[s][a]
+        return td
 
     ##### END CODING HERE #####
 
