@@ -35,17 +35,18 @@ for episode in range(1000):
     # reset env
     s = env.reset()
     # render env. You can comment all render() to turn off the GUI to accelerate training.
-    env.render()
+    # env.render()
     # agent interacts with the environment
     for iter in range(500):
         # choose an action
         a = agent.choose_action(s)
         s_, r, isdone, info = env.step(a)
-        env.render()
+        # env.render()
         # update the episode reward
         episode_reward += r
         
-        # print(f"{s} {a} {s_} {r} {isdone}")
+        # if(episode == 950):
+            # print(f"{s} {a} {s_} {r} {isdone}")
         # agent learns from experience
 
         # add paras size of action space, learning rate and epsilon (for epsilon-greedy)
@@ -69,6 +70,15 @@ for episode in range(1000):
     else:
         agent.epsilon *= 0.95
     agent.lr *= 0.99
+
+
+    # At last, we should plot the episode reward during the train process.
+    # We use excel to plot it because this may be seen nicely.
+    with open(r'HW2\\Code_Template\\episode_reward_Q_learning.txt', 'a', encoding='utf-8') as f:
+        f.write(str(episode) + '\t' + str(episode_reward) + '\n')
+    # Plot the epsilon value during the training.
+    with open(r'HW2\\Code_Template\\epsilon_value_Q_learning.txt', 'a', encoding='utf-8') as f:
+        f.write(str(episode) + '\t' + str(agent.epsilon) + '\n')
 
 # print('\ntraining over\n')   
 
