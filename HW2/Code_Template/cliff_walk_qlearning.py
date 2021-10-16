@@ -25,8 +25,10 @@ np.random.seed(RANDOM_SEED)
 ##### START CODING HERE #####
 
 # construct the intelligent agent.
+# num_space
+num_space = 4 * 12
 # add paras size of action space
-agent = QLearningAgent(all_actions, num_actions)
+agent = QLearningAgent(all_actions, num_actions, num_space)
 
 # start training
 for episode in range(1000):
@@ -74,11 +76,11 @@ for episode in range(1000):
 
     # At last, we should plot the episode reward during the train process.
     # We use excel to plot it because this may be seen nicely.
-    with open(r'HW2\\Code_Template\\episode_reward_Q_learning.txt', 'a', encoding='utf-8') as f:
-        f.write(str(episode) + '\t' + str(episode_reward) + '\n')
+    # with open(r'HW2\\Code_Template\\episode_reward_Q_learning.txt', 'a', encoding='utf-8') as f:
+        # f.write(str(episode) + '\t' + str(episode_reward) + '\n')
     # Plot the epsilon value during the training.
-    with open(r'HW2\\Code_Template\\epsilon_value_Q_learning.txt', 'a', encoding='utf-8') as f:
-        f.write(str(episode) + '\t' + str(agent.epsilon) + '\n')
+    # with open(r'HW2\\Code_Template\\epsilon_value_Q_learning.txt', 'a', encoding='utf-8') as f:
+        # f.write(str(episode) + '\t' + str(agent.epsilon) + '\n')
 
 # print('\ntraining over\n')   
 
