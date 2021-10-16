@@ -70,7 +70,7 @@ for episode in range(1000):
     if (agent.epsilon < 1e-2):
         agent.epsilon = 0
     else:
-        agent.epsilon *= 0.95
+        agent.epsilon *= 0.9
     agent.lr *= 0.99
 
 

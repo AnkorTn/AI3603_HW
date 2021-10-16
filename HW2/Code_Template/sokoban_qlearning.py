@@ -74,6 +74,15 @@ for episode in range(1000):
     # agent.lr *= 0.99
 
     print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
+
+    # decrease epsilon and learning rate
+    if (agent.epsilon < 1e-2):
+        agent.epsilon = 0
+    else:
+        agent.epsilon *= 0.99
+
+    agent.lr *= 0.99
+
 print('\ntraining over\n')   
 
 # close the render window after training.
