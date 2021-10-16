@@ -61,12 +61,11 @@ for episode in range(1000):
         episode_reward += r
 
         # append experience into experience pool
+        agent.learn(state, state_, a, r, gamma=0.9)
+
         td = agent.TD_error(state, state_, a, r, gamma=0.9)
         e = experience(state, state_, a, r, -td)
         heappush(agent.experience, e)
-
-        # agent.experience.add((state, state_, a, r))
-        # print(len(agent.experience))
 
         # print(f"{s} {a} {s_} {r} {isdone}")
 
@@ -80,12 +79,6 @@ for episode in range(1000):
             agent.learn(state, state_, a, r, gamma=0.9)
             cnt -= 1
             agent.lr *= 0.99999
-
-        # for experience in agent.experience:
-        #     state, state_ = experience[0], experience[1]
-        #     a = experience[2]
-        #     r = experience[3]
-        #     agent.learn(state, state_, a, r, gamma=0.9)
         
         s = s_
         if isdone:
