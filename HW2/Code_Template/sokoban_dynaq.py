@@ -28,28 +28,54 @@ np.random.seed(RANDOM_SEED)
 ####### START CODING HERE #######
 
 # construct the intelligent agent.
-agent = DynaQAgent(all_actions)
+agent = DynaQAgent(all_actions, num_actions, num_space=200000)
 
 # start training
 for episode in range(1000):
     episode_reward = 0
     s = env.reset()
     # render env. You can comment all render() to turn off the GUI to accelerate training.
-    env.render()
+    # env.render()
     # agent interacts with the environment
     for iter in range(500):
-        a = agent.choose_action(s)
+        # scalar s.
+        state = s[0] + s[1] * 7 + ((s[2] + s[3] * 7)  + (s[4] + s[5] * 7) * 49 ) * 49
+
+        a = agent.choose_action(state)
         s_, r, isdone, info = env.step(a)
-        env.render()
+        # scalar s__.
+        state_ = s_[0] + s_[1] * 7 + ((s_[2] + s_[3] * 7)  + (s_[4] + s_[5] * 7) * 49 ) * 49
+
+        # env.render()
         episode_reward += r
-        print(f"{s} {a} {s_} {r} {isdone}")
-        agent.learn()
+
+        # append experience into experience pool
+        agent.experience.append((state, state_, a, r))
+
+        # print(f"{s} {a} {s_} {r} {isdone}")
+
+        # learn from experience pool
+        for experience in agent.experience:
+            state, state_ = experience[0], experience[1]
+            a = experience[2]
+            r = experience[3]
+            agent.learn(state, state_, a, r, gamma=0.9)
+        
         s = s_
         if isdone:
-            time.sleep(0.5)
+            # time.sleep(0.5)
             break
 
     print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
+
+    # decrease epsilon and learning rate
+    if (agent.epsilon < 1e-2):
+        agent.epsilon = 0
+    else:
+        agent.epsilon *= 0.98
+
+    agent.lr *= 0.99
+
 print('\ntraining over\n')   
 
 # close the render window after training.
