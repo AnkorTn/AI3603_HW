@@ -208,19 +208,55 @@ class DynaQAgent(object):
 ##### START CODING HERE #####
 class RLAgentWithOtherExploration(object):
     """initialize the agent"""
-    def __init__(self, all_actions):
+    def __init__(self, all_actions, num_actions, num_space):
+        """initialize the agent. Maybe more function inputs are needed."""
         self.all_actions = all_actions
-        self.epsilon = 1.0
+
+        # initialize Q-table by the size of action space and state space (4*12)
+        self.q_table = [[0 for _ in range(num_actions)] for _ in range(num_space)]
+
+        # record the number of selection times.
+        # num_action has 0,1,2,3 up to 4 directions, and the "4" dimension is the total number.
+        self.times_table = [[0 for _ in range(num_actions + 1)] for _ in range(num_space)]
+
+        # learning rate
+        self.lr = 1.0
 
     def choose_action(self, observation):
         """choose action with other exploration algorithms."""
-        action = np.random.choice(self.all_actions)
+        # calculate pi according to Q and exploration strategy
+        action = 0
+
+        max_q = float('-inf')
+
+        for i in range(len(self.q_table[observation])):
+            if(self.times_table[observation][i] == 0):
+                action = i
+                break
+            else:
+                temp = self.q_table[observation][i] + math.sqrt(2 * math.log(self.times_table[observation][4])/self.times_table[observation][i])
+                if (temp > max_q):
+                    max_q = temp
+                    action = i
+        self.times_table[observation][4] += 1
+        self.times_table[observation][action] += 1
         return action
     
-    def learn(self):
+    def learn(self, s, s_, a, r, gamma):
         """learn from experience"""
-        time.sleep(0.5)
-        print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
+        # time.sleep(0.5)
+
+        max_q = float('-inf')
+
+        for i in range(len(self.q_table[s_])):
+            if (self.q_table[s_][i] > max_q):
+                max_q = self.q_table[s_][i]
+
+        # Q-learning update rule
+        # topo in pseudocode
+        self.q_table[s][a] = (1-self.lr)*self.q_table[s][a] + self.lr*(r + gamma*max_q)
+
+        # print("[INFO] The learning process complete. (ﾉ｀⊿´)ﾉ")
         return True
 ##### END CODING HERE #####
 
