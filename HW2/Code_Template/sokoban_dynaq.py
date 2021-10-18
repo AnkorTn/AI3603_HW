@@ -46,7 +46,7 @@ for episode in range(1000):
     episode_reward = 0
     s = env.reset()
     # render env. You can comment all render() to turn off the GUI to accelerate training.
-    # env.render()
+    env.render()
     # agent interacts with the environment
     for iter in range(500):
         # scalar s.
@@ -57,7 +57,7 @@ for episode in range(1000):
         # scalar s__.
         state_ = s_[0] + s_[1] * 7 + ((s_[2] + s_[3] * 7)  + (s_[4] + s_[5] * 7) * 49 ) * 49
 
-        # env.render()
+        env.render()
         episode_reward += r
 
         # append experience into experience pool
@@ -77,6 +77,11 @@ for episode in range(1000):
             a = e.a
             r = e.r
             agent.learn(state, state_, a, r, gamma=0.9)
+
+            # update td-error and push back
+            td = agent.TD_error(state, state_, a, r, gamma=0.9)
+            e = experience(state, state_, a, r, -td)
+            heappush(agent.experience, e)
 
             cnt -= 1
             # update learning rate
