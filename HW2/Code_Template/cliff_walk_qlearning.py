@@ -67,10 +67,10 @@ for episode in range(1000):
     # print('episode:', episode, 'episode_reward:', episode_reward, 'epsilon:', agent.epsilon)  
 
     # decrease epsilon and learning rate
-    if (agent.epsilon < 1e-2):
+    if (agent.epsilon < 0.01):
         agent.epsilon = 0
     else:
-        agent.epsilon *= 0.9
+        agent.epsilon *= 0.89
     agent.lr *= 0.99
 
 
@@ -82,7 +82,7 @@ for episode in range(1000):
     # with open(r'HW2\\Code_Template\\epsilon_value_Q_learning.txt', 'a', encoding='utf-8') as f:
         # f.write(str(episode) + '\t' + str(agent.epsilon) + '\n')
 
-# print('\ntraining over\n')   
+print('\ntraining over\n')   
 
 # close the render window after training.
 env.close()

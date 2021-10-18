@@ -94,8 +94,14 @@ for episode in range(1000):
         agent.epsilon = 0
     else:
         agent.epsilon *= 0.865
-
-
+    # At last, we should plot the episode reward during the train process.
+    # We use excel to plot it because this may be seen nicely.
+    # with open(r'HW2\\Code_Template\\episode_reward_dynaq_sokoban.txt', 'a', encoding='utf-8') as f:
+        # f.write(str(episode) + '\t' + str(episode_reward) + '\n')
+    # Plot the epsilon value during the training.
+    # with open(r'HW2\\Code_Template\\epsilon_value_dynaq_sokoban.txt', 'a', encoding='utf-8') as f:
+        # f.write(str(episode) + '\t' + str(agent.epsilon) + '\n')
+    # Visualize the final path after training.
 
 print('\ntraining over\n')   
 
