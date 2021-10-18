@@ -70,14 +70,16 @@ for episode in range(1000):
         # print(f"{s} {a} {s_} {r} {isdone}")
 
         # learn from experience pool
-        cnt = 100
+        cnt = 10
         while (cnt and agent.experience):
             e = heappop(agent.experience)
             state, state_ = e.s, e.s_
             a = e.a
             r = e.r
             agent.learn(state, state_, a, r, gamma=0.9)
+
             cnt -= 1
+            # update learning rate
             agent.lr *= 0.99999
         
         s = s_
@@ -91,7 +93,7 @@ for episode in range(1000):
     if (agent.epsilon < 0.05):
         agent.epsilon = 0
     else:
-        agent.epsilon *= 0.87
+        agent.epsilon *= 0.865
 
 
 
