@@ -15,8 +15,8 @@ NP = 1000  # Number of Particle
 NTh = NP / 2.0  # Number of particle for re-sampling
 
 # Set the random seed to ensure the repeatability.
-# seed=1
-seed = 2
+seed=2
+# seed = 2
 np.random.seed(seed)
 
 #  Estimation parameter of PF, you may use them in the PF algorithm. You can use the recommended values as follows.
@@ -157,7 +157,7 @@ def notinroom(x, y):
         return False
     return True
 
-def obstacle(px, angle, step = 0.1):
+def obstacle(px, angle, step = 0.05):
     # return the shortest distance when meeting obstacles
     x, y, theta, dis = px[0][0], px[1][0], px[2][0], 0
     # heng = x+d*cos(theta)      -90  -45     +0   +45     +90     
