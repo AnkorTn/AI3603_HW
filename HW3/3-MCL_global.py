@@ -15,8 +15,8 @@ NP = 1000  # Number of Particle
 NTh = NP / 2.0  # Number of particle for re-sampling
 
 # Set the random seed to ensure the repeatability.
-# seed=1
-seed = 2
+seed=1
+# seed = 2
 np.random.seed(seed)
 
 #  Estimation parameter of PF, you may use them in the PF algorithm. You can use the recommended values as follows.
