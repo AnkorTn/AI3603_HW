@@ -161,7 +161,7 @@ def obstacle(px, angle, step = 0.05):
     while(notinroom(x,y)):
         x += step * cos(theta + angle)
         y += step * sin(theta + angle)
-    return (px[0][0]-x)**2 + (px[1][0]-y)**2
+    return ((px[0][0]-x)**2 + (px[1][0]-y)**2)**0.5
 
 def pf_localization(px,pw,data,u):
     """
@@ -185,7 +185,7 @@ def pf_localization(px,pw,data,u):
     """
     t1 = time.time()
     ### START CODE HERE ###
-    print(px)
+    # print(px)
     '''
     motion_model(x, u): Given the current state and control input, return the state at next time.
     heng = x+d*cos(theta)      -90  -45     +0   +45     +90     
@@ -194,8 +194,8 @@ def pf_localization(px,pw,data,u):
     '''
     angle = [- 0.5 * math.pi, - 0.25 * math.pi, 0, 0.25 * math.pi, 0.5 * math.pi]
     # u_error = np.random.normal(loc = u, scale = R, size  = NP)
-    u_error = np.random.randn(400,2)@R
-    data_error = np.random.randn(2000,1)@Q
+    u_error = np.random.randn(NP,2)@R
+    data_error = np.random.randn(NP*5,1)@Q
     # print(data_error)
     for ip in range(NP):
         #  Prediction step: Predict with random input sampling
@@ -209,7 +209,7 @@ def pf_localization(px,pw,data,u):
         px[0][ip], px[1][ip], px[2][ip] = tmp_px[0], tmp_px[1], tmp_px[2]
         
         #  Update steps: Calculate importance weight
-        dis = [abs(obstacle(tmp_px, angle[i])-data[i] - data_error[ip*5+i]) for i in range(5)]
+        dis = [abs(obstacle(tmp_px, angle[i])-data[i] - data_error[ip*5+i])**2 for i in range(5)]
         # print(dis)
         # Add the error
         #  + Q[0] * (-1 + 2 * np.random.random())

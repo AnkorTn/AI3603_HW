@@ -5,6 +5,8 @@ import math
 from math import sin, cos, pi
 import time
 
+from numpy.random.mtrand import seed
+
 ###  START CODE HERE  ###
 # You can tune the hyper-parameter, and define your utility function or class in this block if necessary. 
     
@@ -13,7 +15,8 @@ NP = 1000  # Number of Particle
 NTh = NP / 2.0  # Number of particle for re-sampling
 
 # Set the random seed to ensure the repeatability.
-seed=1
+# seed=1
+seed = 2
 np.random.seed(seed)
 
 #  Estimation parameter of PF, you may use them in the PF algorithm. You can use the recommended values as follows.
@@ -28,9 +31,11 @@ pts=5
 
 #  Simulation parameter
 Q_sim = np.diag([0.05]) ** 2  # add noise to lidar readings
+# R_sim = np.diag([0, 0]) ** 2  # add noise to control command
 R_sim = np.diag([0.03, np.deg2rad(3)]) ** 2  # add noise to control command
 
 v=0.5  #linear velocity
+# v=0.48 #linear velocity
 w=0.25 #angular velocity
 
 DT = 0.1  # time tick [s]
@@ -137,6 +142,31 @@ def generate_particles(pos):
     px[0],px[1],px[2],=x,y,yaw
     return px,pw
 
+def notinroom(x, y):
+    if(x<=0 or x>=5 or y<=0 or y>=5):
+        return False
+    if(1.0<=x<=1.5 and 2<=y<=2.5):
+        return False
+    if(2<=x<=2.5 and 1<=y<=1.5):
+        return False
+    if(3<=x<=3.5  and 1<=y<=1.5):
+        return False
+    if(2<=x<=3 and 2<=y<=3.5):
+        return False
+    if(4<=x<=4.5 and 4<=y<=4.5):
+        return False
+    return True
+
+def obstacle(px, angle, step = 0.05):
+    # return the shortest distance when meeting obstacles
+    x, y, theta, dis = px[0][0], px[1][0], px[2][0], 0
+    # heng = x+d*cos(theta)      -90  -45     +0   +45     +90     
+    # zong = y+d*sin(theta)      -90  -45     +0   +45     +90
+    while(notinroom(x,y)):
+        x += step * cos(theta + angle)
+        y += step * sin(theta + angle)
+    return ((px[0][0]-x)**2 + (px[1][0]-y)**2)**0.5
+
 def pf_localization(px,pw,data,u):
     """
     Localization with Particle filter. In this function, you need to:
@@ -159,20 +189,48 @@ def pf_localization(px,pw,data,u):
     """
     t1 = time.time()
     ### START CODE HERE ###
-
+    # print(px)
+    '''
+    motion_model(x, u): Given the current state and control input, return the state at next time.
+    heng = x+d*cos(theta)      -90  -45     +0   +45     +90     
+    zong = y+d*sin(theta)      -90  -45     +0   +45     +90
+    def obstacle(px, angle, step = 0.05):  2 * math.pi 
+    '''
+    angle = [- 0.5 * math.pi, - 0.25 * math.pi, 0, 0.25 * math.pi, 0.5 * math.pi]
+    # u_error = np.random.normal(loc = u, scale = R, size  = NP)
+    u_error = np.random.randn(NP,2)@R
+    data_error = np.random.randn(NP*5,1)@Q
+    # print(data_error)
     for ip in range(NP):
         #  Prediction step: Predict with random input sampling
-        pass
-
+        # Give the next step state
+        tmp_px = np.array([[px[0][ip]],[px[1][ip]],[px[2][ip]]])
+        # print(tmp_px)
+        # Q[0] * (-1 + 2 * np.random.random())
+        # print(np.array([u_error[ip]]).T)
+        tmp_px = motion_model(tmp_px,u + np.array([u_error[ip]]).T)
+        # print(tmp_px)
+        px[0][ip], px[1][ip], px[2][ip] = tmp_px[0], tmp_px[1], tmp_px[2]
+        
         #  Update steps: Calculate importance weight
-        pass
-    
+        dis = [abs(obstacle(tmp_px, angle[i])-data[i] - data_error[ip*5+i])**2 for i in range(5)]
+        # print(dis)
+        # Add the error
+        #  + Q[0] * (-1 + 2 * np.random.random())
+        pw[0][ip] = 1/np.sum(dis)
+        # if(pw[0][ip]<0.1):
+        #     pw[0][ip] = 0.02
+        #  + np.random.random() * Q[0]
+        # print("\t Not Update:")
+        # print(pw)
+        # pw[ip] = 1/sum(dis) + Q[0]
     pw = pw / pw.sum()  # normalize
     x_est = px.dot(pw.T)
 
     # Resample step: Resample the particles.
-    pass
-
+    px, pw = re_sampling(px, pw)
+    # print("\t Update")
+    # print(pw)
     ###  END CODE HERE  ###
     print("The time used for each iteration:",time.time()-t1," s")
     return x_est,px, pw
@@ -190,8 +248,29 @@ def re_sampling(px, pw):
     pw -- The weight of all particles after resampling.
     """
     ### START CODE HERE ###
-
-
+    # random.random() generate random numbers in [0,1]
+    pre_sum = np.zeros(NP)
+    weight = np.zeros(NP)
+    pre_sum[0] = pw[0][0]
+    for i in range(1,NP):
+        pre_sum[i] = pre_sum[i-1] + pw[0][i]
+    tmp_px = np.zeros((3, NP))
+    # generate 400 particles
+    for i in range(NP):
+        pbt = np.random.random()
+        for j in range(NP):
+            if(pbt>pre_sum[j]):
+                continue
+            weight[j] += 1
+            # tmp_px[0][i], tmp_px[1][i], tmp_px[2][i] = px[0][j], px[1][j], px[2][j]
+            tmp_px[0][i], tmp_px[1][i], tmp_px[2][i] = px[0][j] + Q[0] * (-1 + 2 * np.random.random()), px[1][j] + Q[0] * (-1 + 2 * np.random.random()), px[2][j]
+            break
+    # print(tmp_px)
+    px = tmp_px
+    pw = np.zeros((1, NP)) + 1.0 / NP  # Particle weight
+    # pw = np.array([[weight[i] for i in range(NP)]])
+    # print(pw)
+    # pw = pw / pw.sum()
     ###  END CODE HERE  ###
     return px, pw
 
