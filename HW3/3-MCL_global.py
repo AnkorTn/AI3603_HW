@@ -292,6 +292,12 @@ if __name__ == '__main__':
     h_x_est = x_est
     h_x_true=np.array([[pos[0]],[pos[1]],[ori]])
     tic = 0.0
+
+    # Initialize the prediction history.
+    h_p_true = np.array([[pos[0]],[pos[1]]])
+    # print(h_p_true)
+    # cnt = 0
+
     # Start simulation.
     while SIM_TIME >= tic:
         tic += DT
@@ -322,8 +328,28 @@ if __name__ == '__main__':
             plt.plot(np.array(h_x_true[0, :]).flatten(),
                      np.array(h_x_true[1, :]).flatten(), "-b")
             
+            # Draw data points
+            angle = [- 0.5 * math.pi, - 0.25 * math.pi, 0, 0.25 * math.pi, 0.5 * math.pi]
+            xx, yy = [], []
+            for i in range(5):
+                x, y = pos[0], pos[1]
+                x += data[i] * cos(ori + angle[i])
+                y += data[i] * sin(ori + angle[i])
+                xx.append(x)
+                yy.append(y)
+            plt.scatter(xx,yy,color = 'r')
+
             # Plot the particles
             plt.scatter(px[0,:],px[1,:],color = 'g',s=5)
+
+            # Draw the predict path.
+            # plt.scatter(sum(px[0,:])/400.0,sum(px[1,:])/400.0,color = 'orange')
+            # cnt += 1
+            # if(cnt > 15):
+            h_p_true = np.hstack((h_p_true, np.array([[sum(px[0,:])/1000.0],[sum(px[1,:])/1000.0]])))
+            # print(np.array([[sum(px[0,:])/1000.0],[sum(px[1,:])/1000.0]]))
+            plt.plot(np.array(h_p_true[0, :]).flatten(),
+                    np.array(h_p_true[1, :]).flatten(), "orange")
 
             plt.axis("equal")
             plt.grid(True)

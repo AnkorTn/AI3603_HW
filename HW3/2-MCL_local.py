@@ -289,6 +289,10 @@ if __name__ == '__main__':
     h_x_est = x_est
     h_x_true=np.array([[pos[0]],[pos[1]],[ori]])
     tic = 0.0
+    
+    # Initialize the prediction history.
+    h_p_true = np.array([[pos[0]],[pos[1]]])
+
     # Start simulation.
     while SIM_TIME >= tic:
         tic += DT
@@ -307,6 +311,22 @@ if __name__ == '__main__':
         pos = controller.get_robot_pos()
         ori = controller.get_robot_ori()
         ###  START CODE HERE  ###
+
+        '''
+        def obstacle(px, angle, step = 0.05):
+        # return the shortest distance when meeting obstacles
+        angle = [- 0.5 * math.pi, - 0.25 * math.pi, 0, 0.25 * math.pi, 0.5 * math.pi]
+        for i in range(5):
+            x, y = pos[0], pos[1]
+            x += data[i] * cos(ori + angle[i])
+            y += data[i] * sin(ori + angle[i])
+            plt.plot([x],[y],'o', color = 'b', s = 3)
+        # heng = x+d*cos(theta)      -90  -45     +0   +45     +90     
+        # zong = y+d*sin(theta)      -90  -45     +0   +45     +90
+        while(notinroom(x,y)):
+        plt.plot([2,3,4,5],[3,4,5,6],'o')  #  （2，3），（3，4），（4，5），（5，6） 4个离散的点。
+        return ((px[0][0]-x)**2 + (px[1][0]-y)**2)**0.5
+        '''
         # Visualization
         if True:
             plt.cla()
@@ -318,9 +338,26 @@ if __name__ == '__main__':
             plt.scatter(x, y)
             plt.plot(np.array(h_x_true[0, :]).flatten(),
                      np.array(h_x_true[1, :]).flatten(), "-b")
-            
+
+            # Draw data points
+            angle = [- 0.5 * math.pi, - 0.25 * math.pi, 0, 0.25 * math.pi, 0.5 * math.pi]
+            xx, yy = [], []
+            for i in range(5):
+                x, y = pos[0], pos[1]
+                x += data[i] * cos(ori + angle[i])
+                y += data[i] * sin(ori + angle[i])
+                xx.append(x)
+                yy.append(y)
+            plt.scatter(xx,yy,color = 'r')
+
             # Plot the particles
             plt.scatter(px[0,:],px[1,:],color = 'g',s=5)
+
+            # Draw the predict path.
+            # plt.scatter(sum(px[0,:])/400.0,sum(px[1,:])/400.0,color = 'orange')
+            h_p_true = np.hstack((h_p_true, np.array([[sum(px[0,:])/400.0],[sum(px[1,:])/400.0]])))
+            plt.plot(np.array(h_p_true[0, :]).flatten(),
+                     np.array(h_p_true[1, :]).flatten(), "orange")
 
             plt.axis("equal")
             plt.grid(True)
