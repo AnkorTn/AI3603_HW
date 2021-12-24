@@ -2,9 +2,9 @@
 
 These are homework codes for AI3603 in SJTU. The teacher is Yue Gao. We hope the codes are beneficial for you.
 
-The last update time: 2021/12/16 17:35(Actually the third homework is posted very late.)
+The last update time: 2021/12/24 22:20(Actually the third homework is posted very late.)
 
-2021/12/16 : Released after the assignments are due.
+2021/12/24 : Released after the assignments are due.
 
 ### Homework 1
 
